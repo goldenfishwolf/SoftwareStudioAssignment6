@@ -2,6 +2,7 @@ package main.java;
 
 import java.util.ArrayList;
 
+import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 
 /**
@@ -25,7 +26,7 @@ public class Character {
 	private float circleX, circleY; 
 	private float circleRadius;
 	//the position(represented by rad) on the big circle
-	private float circleRad;
+//	private float circleRad;
 	
 	/*
 	 * Store these variables when instance created.
@@ -48,6 +49,7 @@ public class Character {
 		this.circleY = circleY;
 		this.circleRadius = circleRadius;
 		net_index = -1;
+		this.index = index;
 	}
 	
 	/*
@@ -63,7 +65,7 @@ public class Character {
 			this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 		}else{ 
 			//when get focused, the circle get bigger and show its name
-			this.radius = 30;
+			Ani.to(this, (float)0.5, "radius", 30);
 			this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 			this.parent.textSize(20);
 			this.parent.text(this.name, this.x, this.y+10);
@@ -78,8 +80,8 @@ public class Character {
 //					this.parent.arc((this.x + ch.x)/2, (this.y + ch.y)/2, 
 //							arcRadius, arcRadius, );
 //			}
-			this.x = this.orgX;
-			this.y = this.orgY;
+			Ani.to(this, (float)0.5, "x", orgX);
+			Ani.to(this, (float)0.5, "x", orgY);
 		}
 //		else{
 //			double dis = Math.pow(Math.pow(this.x - this.circleX, 2) + Math.pow(this.y - this.circleY, 2), 1/2);
