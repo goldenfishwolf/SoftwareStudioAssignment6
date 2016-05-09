@@ -11,6 +11,8 @@ import processing.core.PApplet;
 public class Character {
 
 	public float x, y, radius;
+	public int index; //the index of character in the JSONArray
+	public int net_index; //the order of the character on the circle
 	private float orgX, orgY;
 	private String name;
 	private PApplet parent;
@@ -28,7 +30,8 @@ public class Character {
 	/*
 	 * Store these variables when instance created.
 	 */
-	public Character(PApplet parent, String name, int colour, float x, float y, float circleX, float circleY, float circleRadius){
+	public Character(PApplet parent, String name, int colour, float x, float y, float circleX, float circleY, float circleRadius, int index)
+	{
 		this.parent = parent;
 		this.name = name;
 		this.colour = colour;
@@ -44,6 +47,7 @@ public class Character {
 		this.circleX = circleX;
 		this.circleY = circleY;
 		this.circleRadius = circleRadius;
+		net_index = -1;
 	}
 	
 	/*
@@ -76,12 +80,13 @@ public class Character {
 //			}
 			this.x = this.orgX;
 			this.y = this.orgY;
-		}else{
-			double dis = Math.pow(Math.pow(this.x - this.circleX, 2) + Math.pow(this.y - this.circleY, 2), 1/2);
-			//put this object "on" the circle
-			this.x = (float) (this.circleX + (this.x - this.circleX)*this.circleRadius/dis);
-			this.y = (float) (this.circleY + (this.y - this.circleY)*this.circleRadius/dis);
 		}
+//		else{
+//			double dis = Math.pow(Math.pow(this.x - this.circleX, 2) + Math.pow(this.y - this.circleY, 2), 1/2);
+//			//put this object "on" the circle
+//			this.x = (float) (this.circleX + (this.x - this.circleX)*this.circleRadius/dis);
+//			this.y = (float) (this.circleY + (this.y - this.circleY)*this.circleRadius/dis);
+//		}
 
 		
 	}
@@ -160,6 +165,12 @@ public class Character {
 			this.x = x;
 			this.y = y;
 		}
+	}
+	
+	public void resetorg()
+	{
+		x = orgX;
+		y = orgY;
 	}
 	
 }
