@@ -1,6 +1,8 @@
 package main.java;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Random;
 
 import de.looksgood.ani.Ani;
 import processing.core.PApplet;
@@ -21,6 +23,9 @@ public class Character {
 	private boolean isAdded; //whether it's added in the circle
 	private boolean isFocused; //whether user's mouse stop on it
 	private boolean isDragging; //whether user drag this object
+	private boolean isAddedIsEnabled; //disable isAdded when dragging, enable it after that 
+	private boolean aniIsEnabled; 
+	//only enable change of this.x, this.y when go into display()'s isAdded{} for the first time
 	private int colour; //the colour in json file
 	//about the big circle
 	private float circleX, circleY; 
@@ -50,6 +55,8 @@ public class Character {
 		this.circleRadius = circleRadius;
 		net_index = -1;
 		this.index = index;
+		this.isAddedIsEnabled = true;
+		this.aniIsEnabled = false;
 	}
 	
 	/*
@@ -62,35 +69,20 @@ public class Character {
 		
 		if(!isFocused){
 			this.radius = 20;
-			this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 		}else{ 
 			//when get focused, the circle get bigger and show its name
 			Ani.to(this, (float)0.5, "radius", 30);
-			this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 			this.parent.textSize(20);
-			this.parent.text(this.name, this.x, this.y+10);
+			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
 		}
-		
-		if(!isAdded){
-			//about the network
-//			double arcRadius;
-//			for(Character ch : targets){
-//				if(ch.getIsAdded())
-//					arcRadius = Math.pow(Math.pow((ch.x - this.x),2)+Math.pow((ch.y - this.y),2), 1/2);
-//					this.parent.arc((this.x + ch.x)/2, (this.y + ch.y)/2, 
-//							arcRadius, arcRadius, );
-//			}
-			Ani.to(this, (float)0.5, "x", orgX);
-			Ani.to(this, (float)0.5, "x", orgY);
+		if(isAddedIsEnabled && !isDragging){
+			if(!isAdded){
+				this.x = this.orgX;
+				this.y = this.orgY;
+			}
 		}
-//		else{
-//			double dis = Math.pow(Math.pow(this.x - this.circleX, 2) + Math.pow(this.y - this.circleY, 2), 1/2);
-//			//put this object "on" the circle
-//			this.x = (float) (this.circleX + (this.x - this.circleX)*this.circleRadius/dis);
-//			this.y = (float) (this.circleY + (this.y - this.circleY)*this.circleRadius/dis);
-//		}
 
-		
+		this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 	}
 	
 	/*
@@ -135,11 +127,20 @@ public class Character {
 	
 	//called after the mouse drop the object
 	//MOUSE_RELEASED
-	public void setIsAdded(float x, float y){ //mouse's position
-		if(Math.pow(this.circleX-x,2) + Math.pow(this.circleY-y,2)<=Math.pow(this.circleRadius, 2))
+	public void setIsAdded(float x, float y, boolean isAddAll, boolean isClear){ //mouse's position
+		if(isClear){
+			this.isAdded = false;
+		}else if(isAddAll || (Math.pow(this.circleX-this.x,2) + Math.pow(this.circleY-this.y,2)<=Math.pow(this.circleRadius, 2))){
+			if(isAddAll){
+				this.x = (float) (Math.random()*this.parent.height);
+				this.y = (float) (Math.random()*this.parent.height);
+			}
+			
 			this.isAdded = true; //the object falls in the big circle
-		else
+			this.aniIsEnabled = true;
+		}else{
 			this.isAdded = false; //the object falls out the big circle
+		}
 	}
 	
 	public boolean getIsDragging(){
@@ -150,6 +151,7 @@ public class Character {
 	//MOUSE_PRESSED
 	public void setIsDragging(float x, float y){
 		if(Math.pow(this.x-x,2) + Math.pow(this.y-y,2)<=Math.pow(this.radius, 2)){
+			this.isAddedIsEnabled = false;
 			this.isDragging = true;
 		}
 	}
@@ -158,6 +160,7 @@ public class Character {
 	//MOUSE_RELEASED
 	public void resetIsDragging(){
 		this.isDragging = false;
+		this.isAddedIsEnabled = true;
 	}
 	
 	//called when the mouse is dragging
