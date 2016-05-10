@@ -127,10 +127,13 @@ public class Network {
 		characterAdded.add(ch);
 	}
 	
-	public void deductNetwork(Character ch){ 
+	public void deductNetwork(Character ch)
+	{ 
 		//change the last element's index to the index of the element that is going to be removed
-		characterAdded.get(net_num-1).net_index = ch.net_index;
-		characterAdded.remove(ch);
+		int ch_order = characterAdded.indexOf(ch);
+		characterAdded.get( characterAdded.size()-1 ).net_index = ch.net_index;
+		characterAdded.set( ch_order, characterAdded.get( characterAdded.size()-1 ) );
+		characterAdded.remove(characterAdded.get( characterAdded.size()-1 ));
 		net_num--;
 	}
 	
