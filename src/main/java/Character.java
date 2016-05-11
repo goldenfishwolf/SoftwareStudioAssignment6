@@ -24,14 +24,11 @@ public class Character {
 	private boolean isFocused; //whether user's mouse stop on it
 	private boolean isDragging; //whether user drag this object
 	private boolean isAddedIsEnabled; //disable isAdded when dragging, enable it after that 
-//	private boolean aniIsEnabled; 
 	//only enable change of this.x, this.y when go into display()'s isAdded{} for the first time
 	private int colour; //the colour in json file
 	//about the big circle
 	private float circleX, circleY; 
 	private float circleRadius;
-	//the position(represented by rad) on the big circle
-//	private float circleRad;
 	
 	/*
 	 * Store these variables when instance created.
@@ -56,7 +53,6 @@ public class Character {
 		net_index = -1;
 		this.index = index;
 		this.isAddedIsEnabled = true;
-//		this.aniIsEnabled = false;
 	}
 	
 	/*
@@ -68,22 +64,6 @@ public class Character {
 		this.parent.noStroke();
 		this.parent.fill(colour);
 		this.parent.ellipse(this.x, this.y, this.radius, this.radius);
-//		if(!isFocused){
-//			this.radius = 30;
-//		}else{ 
-//			//when get focused, the circle get bigger and show its name
-//			Ani.to(this, (float)0.5, "radius", 40);
-////			this.parent.textSize(20);
-////			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
-//			
-//			this.parent.fill(64, 128, 128);
-//			this.parent.rect(x, y-10, 
-//					name.length()*16 + 10, 40, 12, 12, 12, 12);
-//			
-//			this.parent.textSize(20);
-//			this.parent.fill(255);
-//			this.parent.text(name, x+15, y+15);
-//		}
 		if(isAddedIsEnabled && !isDragging){
 			if(!isAdded){
 				resetorg();
@@ -140,11 +120,9 @@ public class Character {
 				this.y = (float) (Math.random()*this.parent.height);
 			
 			this.isAdded = true; //the object falls in the big circle
-//			this.aniIsEnabled = true;
 		}else{
 			this.isAdded = false; //the object falls out the big circle
 			this.resetorg();
-//			System.out.println(orgX + " "+ orgY + " " + x + " " + y);
 		}
 	}
 	
@@ -181,8 +159,6 @@ public class Character {
 	{
 		Ani.to(this, (float)0.5, "x", orgX);
 		Ani.to(this, (float)0.5, "y", orgY);
-//		x = orgX;
-//		y = orgY;
 	}
 	
 }

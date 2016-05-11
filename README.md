@@ -20,3 +20,6 @@ Example:
 + The width of each link is visualized based on the value of the link.
 + ...etc.
 
+吳俊德
+在network裡，我用addNetwork來把被滑鼠拖曳進圈圈的character加進Network裡的Arraylist裡，而在display函數裡，會將所有在圈圈裡的character根據關係來連線
+另外，clearall就是負責把所有在圈圈上的character清空，deductNetwork是把某個特定的character清掉

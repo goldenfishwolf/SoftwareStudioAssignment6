@@ -79,8 +79,6 @@ public class MainApplet extends PApplet{
 			{
 				//when get focused, the circle get bigger and show its name
 				Ani.to(ch, (float)0.3, "radius", 40);
-//				this.parent.textSize(20);
-//				this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
 				
 				fill(64, 128, 128);
 				rect(mouseX, mouseY-10, ch.getName().length()*16 + 10, 40, 12, 12, 12, 12);
@@ -134,7 +132,6 @@ public class MainApplet extends PApplet{
 		links = data.getJSONArray("links");
 		
 		
-//		int j = 0;
 		for(int i = 0; i< nodes.size();i++){
 			JSONObject node = nodes.getJSONObject(i);
 			
@@ -142,7 +139,6 @@ public class MainApplet extends PApplet{
 			int colour = unhex(node.getString("colour").substring(1));
 			Character ch = new Character(this, name, colour, 50+(i/10)*60, 
 					50+(i%10)*60, circleX, circleY, circleRadius, i); //i: the order in JSON array
-			//j = (j+1)%3;
 			characters.add(ch);
 		}
 		
@@ -151,7 +147,6 @@ public class MainApplet extends PApplet{
 			
 			int source = link.getInt("source");
 			int target = link.getInt("target");
-//			int value = link.getInt("value");
 			characters.get(source).getTargets().add(characters.get(target));
 		}
 	}
