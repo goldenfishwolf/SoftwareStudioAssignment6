@@ -18,12 +18,11 @@ public class Character {
 	public int net_index; //the order of the character on the circle
 	private float orgX, orgY;
 	private String name;
-	private PApplet parent;
+	private MainApplet parent; //can't using PApplet as type!
 	private ArrayList<Character> targets;
 	private boolean isAdded; //whether it's added in the circle
 	private boolean isFocused; //whether user's mouse stop on it
 	private boolean isDragging; //whether user drag this object
-	private boolean isAddedIsEnabled; //disable isAdded when dragging, enable it after that 
 	private boolean aniIsEnabled; 
 	//only enable change of this.x, this.y when go into display()'s isAdded{} for the first time
 	private int colour; //the colour in json file
@@ -36,7 +35,7 @@ public class Character {
 	/*
 	 * Store these variables when instance created.
 	 */
-	public Character(PApplet parent, String name, int colour, float x, float y, float circleX, float circleY, float circleRadius, int index)
+	public Character(MainApplet parent, String name, int colour, float x, float y, float circleX, float circleY, float circleRadius, int index)
 	{
 		this.parent = parent;
 		this.name = name;
@@ -55,30 +54,32 @@ public class Character {
 		this.circleRadius = circleRadius;
 		net_index = -1;
 		this.index = index;
-		this.isAddedIsEnabled = true;
+		this.isDragging = false;
 		this.aniIsEnabled = false;
 	}
 	
 	/*
 	 * Use display() to draw the character on the sketch.
 	 */
-	public void display(){
+	public void display()
+	{
 
 		this.parent.fill(colour);
 		
 		
-		if(!isFocused){
+		if(!isFocused)
+		{
 			this.radius = 20;
-		}else{ 
+		}else
+		{ 
 			//when get focused, the circle get bigger and show its name
 			Ani.to(this, (float)0.5, "radius", 30);
-			this.parent.textSize(20);
-			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
 		}
-		if(isAddedIsEnabled && !isDragging){
-			if(!isAdded){
-				this.x = this.orgX;
-				this.y = this.orgY;
+		if(this.parent.getIndexDragged() == -1)
+		{
+			if(!isAdded)
+			{
+				resetorg();
 			}
 		}
 
@@ -88,85 +89,65 @@ public class Character {
 	/*
 	 * Add the target to the array list when loading file.
 	 */
-	public void addTarget(Character target){
+	public void addTarget(Character target)
+	{
 		this.targets.add(target);
 	}
 	
-	public ArrayList<Character> getTargets(){
+	public ArrayList<Character> getTargets()
+	{
 		return this.targets;
 	}
 	
-	public String getName(){
+	public String getName()
+	{
 		return this.name;
 	}
 	
-	public boolean getIsFocused(){
+	public boolean getIsFocused()
+	{
 		return this.isFocused;
 	}
 	
 	//called whenever mouse moves
 	//MOUSE_MOVED
-	public void setIsFocused(float x, float y){ //mouse's position
+	public void setIsFocused(float x, float y)
+	{ //mouse's position
 		if(Math.pow(this.x-x,2) + Math.pow(this.y-y,2)<=Math.pow(this.radius, 2))
 			this.isFocused = true;
 		else
 			this.isFocused = false;
 	}
 	
-	public int getColour(){
+	public int getColour()
+	{
 		return this.colour;
 	}
 	
-	public void setColour(int colour){
+	public void setColour(int colour)
+	{
 		this.colour = colour;
 	}
 	
-	public boolean getIsAdded(){
+	public boolean getIsAdded()
+	{
 		return this.isAdded;
 	}
 	
-	//called after the mouse drop the object
-	//MOUSE_RELEASED
-	public void setIsAdded(float x, float y, boolean isAddAll, boolean isClear){ //mouse's position
-		if(isClear){
-			this.isAdded = false;
-		}else if(isAddAll || (Math.pow(this.circleX-this.x,2) + Math.pow(this.circleY-this.y,2)<=Math.pow(this.circleRadius, 2))){
-			if(isAddAll){
-				this.x = (float) (Math.random()*this.parent.height);
-				this.y = (float) (Math.random()*this.parent.height);
-			}
-			
-			this.isAdded = true; //the object falls in the big circle
-			this.aniIsEnabled = true;
-		}else{
-			this.isAdded = false; //the object falls out the big circle
-		}
-	}
 	
-	public boolean getIsDragging(){
-		return this.isDragging;
-	}
-	
-	//called when the mouse press
-	//MOUSE_PRESSED
-	public void setIsDragging(float x, float y){
-		if(Math.pow(this.x-x,2) + Math.pow(this.y-y,2)<=Math.pow(this.radius, 2)){
-			this.isAddedIsEnabled = false;
-			this.isDragging = true;
-		}
-	}
-	
-	//called when the mouse release
-	//MOUSE_RELEASED
-	public void resetIsDragging(){
-		this.isDragging = false;
-		this.isAddedIsEnabled = true;
+	//move the determination outside so it's easier
+	public void setIsAdded(boolean isAdded)
+	{
+		this.isAdded = isAdded;
 	}
 	
 	//called when the mouse is dragging
 	//MOUSE_DRAGGED
-	public void setDragPosition(float x, float y){
-		if(this.isDragging){
+	public void setDragPosition(float x, float y)
+	{
+//		if(this.isDragging){
+		if(this.parent.getIndexDragged() == this.index)
+		{
 			this.x = x;
 			this.y = y;
 		}
@@ -174,8 +155,8 @@ public class Character {
 	
 	public void resetorg()
 	{
-		x = orgX;
-		y = orgY;
+		Ani.to(this, (float)0.5, "x", orgX);
+		Ani.to(this, (float)0.5, "y", orgY);
 	}
 	
 }
