@@ -21,6 +21,7 @@ public class Network{
 	private boolean isDraginto;
 	private JSONArray links;
 	private boolean isDisplaying; //swap the right of control between display() and other functions
+	private boolean callClearallLater; //flow control between display() and clearall()
 	
 	public Network(MainApplet parent ,JSONArray links , float circleX, float circleY, float radius )
 	{
@@ -33,10 +34,11 @@ public class Network{
 		this.circleY = circleY;
 		this.radius = radius;
 		this.isDisplaying = true;
+		this.callClearallLater = false;
 	}
 	
 	public void display()
-	{
+	{	isDisplaying = true;
 		// let the character be on the circle
 		if((characterAdded.size() >0) && (isDisplaying) && (this.parent.indexDragged==-1))
 		for(Character characher : characterAdded)
@@ -102,6 +104,9 @@ public class Network{
 				
 			}
 		}
+		isDisplaying = false;
+		if(callClearallLater) clearall();
+		callClearallLater = false;
 		//if player drag the character into the circle, circle become thick
 	}
 	
@@ -116,17 +121,17 @@ public class Network{
 	
 	public void addNetwork(Character ch)
 	{
-		isDisplaying = false;
+//		if(isDisplaying){this.methodToExecuted = 0; return;}
 		ch.net_index = net_num;
 		net_num++;
 		characterAdded.add(ch);
-		isDisplaying = true;
+		
 	}
 	
 	public void deductNetwork(Character ch)
 	{ 
 		//change the last element's index to the index of the element that is going to be removed
-		isDisplaying = false;
+//		if(isDisplaying){this.methodToExecuted = 1; return;}
 //		int ch_order = characterAdded.indexOf(ch);
 //		net_num--;
 //		characterAdded.get( net_num ).net_index = ch.net_index;
@@ -142,7 +147,7 @@ public class Network{
 			characterAdded.remove(net_num-1);
 			net_num--;
 		}
-		isDisplaying = true;
+		
 	}
 	
 	public void clearall()
@@ -154,21 +159,47 @@ public class Network{
 ////			
 //			characterAdded.remove(ch);
 //		}
-		isDisplaying = false;
-		characterAdded.clear();
+		if(isDisplaying){this.callClearallLater = true; return;}
+		
+//		characterAdded.clear();
+//		isDraginto = false;
+//		net_num = 0;
+		
+		for(Iterator<Character> iter = characterAdded.iterator(); iter.hasNext();) 
+		{
+			Character ch = iter.next();
+//			ch.setIsAdded(0,0);
+			ch.setIsAdded(false);
+			ch.net_index = -1;
+			iter.remove();
+		}
+//		characterAdded.clear();
 		isDraginto = false;
 		net_num = 0;
-		isDisplaying = true;
+		
 	}
 	
 	public void clearall(JSONArray links)
 	{
-		isDisplaying = false;
-		net_num = 0;
+//		if(isDisplaying){this.methodToExecuted = 3; return;}
+		
+//		net_num = 0;
+//		isDraginto = false;
+//		this.links = links;
+//		characterAdded.clear();
+		for(Iterator<Character> iter = characterAdded.iterator(); iter.hasNext();) 
+		{
+			Character ch = iter.next();
+			ch.setIsAdded(false);
+			ch.net_index = -1;
+		    iter.remove();
+		}
+//		characterAdded.clear();
 		isDraginto = false;
+		net_num = 0;
 		this.links = links;
-		characterAdded.clear();
-		isDisplaying = true;
+		
+		
 	}
 }
 
