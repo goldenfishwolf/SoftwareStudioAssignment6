@@ -121,7 +121,7 @@ public class Network{
 	
 	public void addNetwork(Character ch)
 	{
-//		if(isDisplaying){this.methodToExecuted = 0; return;}
+
 		ch.net_index = net_num;
 		net_num++;
 		characterAdded.add(ch);
@@ -181,7 +181,6 @@ public class Network{
 	
 	public void clearall(JSONArray links)
 	{
-//		if(isDisplaying){this.methodToExecuted = 3; return;}
 		
 //		net_num = 0;
 //		isDraginto = false;
