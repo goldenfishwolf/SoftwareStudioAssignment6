@@ -24,7 +24,7 @@ public class Character {
 	private boolean isFocused; //whether user's mouse stop on it
 	private boolean isDragging; //whether user drag this object
 	private boolean isAddedIsEnabled; //disable isAdded when dragging, enable it after that 
-	private boolean aniIsEnabled; 
+//	private boolean aniIsEnabled; 
 	//only enable change of this.x, this.y when go into display()'s isAdded{} for the first time
 	private int colour; //the colour in json file
 	//about the big circle
@@ -56,7 +56,7 @@ public class Character {
 		net_index = -1;
 		this.index = index;
 		this.isAddedIsEnabled = true;
-		this.aniIsEnabled = false;
+//		this.aniIsEnabled = false;
 	}
 	
 	/*
@@ -64,17 +64,26 @@ public class Character {
 	 */
 	public void display(){
 
+		
+		this.parent.noStroke();
 		this.parent.fill(colour);
-		
-		
-		if(!isFocused){
-			this.radius = 30;
-		}else{ 
-			//when get focused, the circle get bigger and show its name
-			Ani.to(this, (float)0.5, "radius", 40);
-			this.parent.textSize(20);
-			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
-		}
+		this.parent.ellipse(this.x, this.y, this.radius, this.radius);
+//		if(!isFocused){
+//			this.radius = 30;
+//		}else{ 
+//			//when get focused, the circle get bigger and show its name
+//			Ani.to(this, (float)0.5, "radius", 40);
+////			this.parent.textSize(20);
+////			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
+//			
+//			this.parent.fill(64, 128, 128);
+//			this.parent.rect(x, y-10, 
+//					name.length()*16 + 10, 40, 12, 12, 12, 12);
+//			
+//			this.parent.textSize(20);
+//			this.parent.fill(255);
+//			this.parent.text(name, x+15, y+15);
+//		}
 		if(isAddedIsEnabled && !isDragging){
 			if(!isAdded){
 				this.x = this.orgX;
@@ -82,7 +91,6 @@ public class Character {
 			}
 		}
 
-		this.parent.ellipse(this.x, this.y, this.radius, this.radius);
 	}
 	
 	/*
@@ -127,19 +135,17 @@ public class Character {
 	
 	//called after the mouse drop the object
 	//MOUSE_RELEASED
-	public void setIsAdded(float x, float y, boolean isAddAll, boolean isClear){ //mouse's position
-		if(isClear){
-			this.isAdded = false;
-		}else if(isAddAll || (Math.pow(this.circleX-this.x,2) + Math.pow(this.circleY-this.y,2)<=Math.pow(this.circleRadius, 2))){
-			if(isAddAll){
+	public void setIsAdded(float x, float y){ //mouse's position
+		if((Math.pow(this.circleX-x,2) + Math.pow(this.circleY-y,2)<=Math.pow(this.circleRadius, 2))){
 				this.x = (float) (Math.random()*this.parent.height);
 				this.y = (float) (Math.random()*this.parent.height);
-			}
 			
 			this.isAdded = true; //the object falls in the big circle
-			this.aniIsEnabled = true;
+//			this.aniIsEnabled = true;
 		}else{
 			this.isAdded = false; //the object falls out the big circle
+			this.resetorg();
+//			System.out.println(orgX + " "+ orgY + " " + x + " " + y);
 		}
 	}
 	

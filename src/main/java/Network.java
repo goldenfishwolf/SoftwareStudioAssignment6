@@ -1,6 +1,7 @@
 package main.java;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import de.looksgood.ani.Ani;
 import processing.core.PApplet;
@@ -90,22 +91,24 @@ public class Network {
 						netheight = characher.y - ch.y;
 					}
 					//using fill(255) to make it hollowed
-//					parent.fill(255);
-//					parent.arc(netX, netY, netwidth, 
-//							netheight, (float)(Math.PI/2), (float)(Math.PI*3/2) );
+//					parent.fill(0);
+					parent.noFill();
+					parent.stroke(0);
+					parent.arc(netX, netY, netwidth, 
+							netheight, (float)(Math.PI/2), (float)(Math.PI*3/2) );
 				}
 				
 			}
 		}
 		//if player drag the character into the circle, circle become thick
-		if(isDraginto)
-		{
-			parent.strokeWeight(4);
-		}
-		else
-		{
-			parent.strokeWeight(1);
-		}
+//		if(isDraginto)
+//		{
+//			parent.strokeWeight(4);
+//		}
+//		else
+//		{
+//			parent.strokeWeight(1);
+//		}
 //		parent.fill(255);
 //		parent.ellipse(circleX, circleY, radius*2, radius*2);
 	}
@@ -140,13 +143,14 @@ public class Network {
 	public void clearall()
 	{	
 		//use .remove() will lead to ConcurrentModificationError
-//		for(Character ch : characterAdded)
-//		{
-////			ch.resetorg();
-////			
-//			characterAdded.remove(ch);
-//		}
-		characterAdded.clear();
+		
+		for(Iterator<Character> iter = characterAdded.iterator(); iter.hasNext();) 
+		{
+			Character ch = iter.next();
+			ch.setIsAdded(0,0);
+		    iter.remove();
+		}
+//		characterAdded.clear();
 		isDraginto = false;
 		net_num = 0;
 	}
