@@ -46,7 +46,7 @@ public class Character {
 		//it's original position(on the left side of the big circle) 
 		this.orgX = x;
 		this.orgY = y;
-		this.radius = 20;
+		this.radius = 30;
 		targets = new ArrayList<Character>();
 		this.isFocused = false;
 		this.isAdded = false;
@@ -68,10 +68,10 @@ public class Character {
 		
 		
 		if(!isFocused){
-			this.radius = 20;
+			this.radius = 30;
 		}else{ 
 			//when get focused, the circle get bigger and show its name
-			Ani.to(this, (float)0.5, "radius", 30);
+			Ani.to(this, (float)0.5, "radius", 40);
 			this.parent.textSize(20);
 			this.parent.text(this.name, this.x-this.radius, this.y+this.radius);
 		}

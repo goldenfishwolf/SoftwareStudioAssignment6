@@ -66,10 +66,34 @@ public class MainApplet extends PApplet{
 	
 	public void keyPressed(){
 		characters.clear();
-		if((keyCode == LEFT) && (episode > 1))
-			episode--;
-		else if((keyCode == RIGHT) && (episode < 7))
-			episode++;
+		switch(key)
+		{
+		case '1':
+			episode = 1;
+			break;
+		case '2':
+			episode = 2;
+			break;
+		case '3':
+			episode = 3;
+			break;
+		case '4':
+			episode = 4;
+			break;
+		case '5':
+			episode = 5;
+			break;
+		case '6':
+			episode = 6;
+			break;
+		case '7':
+			episode = 7;
+			break;
+		}
+//		if((keyCode == LEFT) && (episode > 1))
+//			episode--;
+//		else if((keyCode == RIGHT) && (episode < 7))
+//			episode++;
 		file = "starwars-episode-" + episode + "-interactions.json";
 		loadData();
 		network.clearall(links);
@@ -87,9 +111,9 @@ public class MainApplet extends PApplet{
 			
 			String name = node.getString("name");
 			int colour = unhex(node.getString("colour").substring(1));
-			Character ch = new Character(this, name, colour, 50+j*40, 50+(i/3)*40, 
-					circleX, circleY, circleRadius, i); //i: the order in JSON array
-			j = (j+1)%3;
+			Character ch = new Character(this, name, colour, 50+(i/10)*60, 
+					50+(i%10)*60, circleX, circleY, circleRadius, i); //i: the order in JSON array
+			//j = (j+1)%3;
 			characters.add(ch);
 		}
 		
