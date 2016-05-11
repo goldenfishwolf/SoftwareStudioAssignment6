@@ -66,7 +66,9 @@ public class MainApplet extends PApplet{
 		}
 		//radius*2 since ellipse accept diameter
 		ellipse(circleX, circleY, circleRadius*2, circleRadius*2);
-	
+		
+		network.display();
+		
 		fill(139, 69, 19);//brown
 		textSize(40);
 		text("Star Wars" + episode, circleX-95, 45);
@@ -92,7 +94,7 @@ public class MainApplet extends PApplet{
 				Ani.to(ch, (float)0.3, "radius", 30);
 			}
 		}
-		network.display();
+		
 	}
 	
 	public void keyPressed(){
@@ -173,6 +175,10 @@ public class MainApplet extends PApplet{
 				if(ch.getIsAdded())
 				{
 					network.addNetwork(ch);
+				}
+				else
+				{
+					network.deductNetwork(ch);
 				}
 				break;
 			}

@@ -48,69 +48,81 @@ public class Network {
 		}
 		
 		
-		float netX, netY, netwidth, netheight;
+		float netX, netY, netwidth, netheight, netstart,netend;
 		int lineWeight = 0;
 		//draw the line between the characters on the circle
-		if(characterAdded.size() >0)
-		for(Character characher : characterAdded)
+		if(characterAdded.size() > 0)
 		{
-			for(Character ch : characher.getTargets())
+			for(Character characher : characterAdded)
 			{
-				if(ch.net_index != -1)
+				for(Character ch : characher.getTargets())
 				{
-					for(int i = 0; i < links.size(); i++)
+					if(ch.net_index != -1)
 					{
-						JSONObject tem = links.getJSONObject(i);
-						if((tem.getInt("source") == characher.index) && 
-											(tem.getInt("target") == ch.index))
+//						System.out.println(ch.net_index);
+						for(int i = 0; i < links.size(); i++)
 						{
-							lineWeight = tem.getInt("value");
+							JSONObject tem = links.getJSONObject(i);
+							if((tem.getInt("source") == characher.index) && 
+												(tem.getInt("target") == ch.index))
+							{
+								lineWeight = tem.getInt("value");
+							}
 						}
+						
+						parent.strokeWeight(lineWeight/4 + 1);
+//						if(ch.x > characher.x)
+//						{
+//							netX = ch.x;
+//							netwidth = ch.x - characher.x;
+//							if(ch.y > characher.y)
+//							{
+//								netY = ch.y;
+//								netheight = ch.y - characher.y;
+//								netstart = (float)Math.PI*3/2;
+//								netend = (float)Math.PI*2;
+//							}
+//							else
+//							{
+//								netY = characher.y;
+//								netheight = characher.y - ch.y;
+//								netstart = (float)Math.PI;
+//								netend = (float)Math.PI*3/2;
+//							}
+//						}
+//						else
+//						{
+//							netX = characher.x;
+//							netwidth = characher.x - ch.x;
+//							if(ch.y > characher.y)
+//							{
+//								netY = ch.y;
+//								netheight = ch.y - characher.y;
+//								netstart = 0;
+//								netend = (float)Math.PI/2;
+//							}
+//							else
+//							{
+//								netY = characher.y;
+//								netheight = characher.y - ch.y;
+//								netstart = (float)Math.PI/2;
+//								netend = (float)Math.PI;
+//							}
+//						}
+						
+						
+						//using fill(255) to make it hollowed
+//						parent.fill(0);
+						parent.noFill();
+						parent.stroke(0);
+//						parent.arc(netX, netY, netwidth*2, 
+//								netheight*2, netstart, netend );
+						parent.line(characher.x, characher.y, ch.x, ch.y);
 					}
 					
-					parent.strokeWeight(lineWeight);
-					if(ch.x > characher.x)
-					{
-						netX = ch.x;
-						netwidth = ch.x - characher.x;
-					}
-					else
-					{
-						netX = characher.x;
-						netwidth = characher.x - ch.x;
-					}
-					
-					if(ch.y > characher.y)
-					{
-						netY = ch.y;
-						netheight = ch.y - characher.y;
-					}
-					else
-					{
-						netY = characher.y;
-						netheight = characher.y - ch.y;
-					}
-					//using fill(255) to make it hollowed
-//					parent.fill(0);
-					parent.noFill();
-					parent.stroke(0);
-					parent.arc(netX, netY, netwidth, 
-							netheight, (float)(Math.PI/2), (float)(Math.PI*3/2) );
 				}
-				
 			}
 		}
-		//if player drag the character into the circle, circle become thick
-//		if(isDraginto)
-//		{
-//			parent.strokeWeight(4);
-//		}
-//		else
-//		{
-//			parent.strokeWeight(1);
-//		}
-//		parent.fill(255);
-//		parent.ellipse(circleX, circleY, radius*2, radius*2);
 	}
 	
 	public void isDragintoCircle(Character ch) 
@@ -133,11 +145,19 @@ public class Network {
 	public void deductNetwork(Character ch)
 	{ 
 		//change the last element's index to the index of the element that is going to be removed
-		int ch_order = characterAdded.indexOf(ch);
-		characterAdded.get( characterAdded.size()-1 ).net_index = ch.net_index;
-		characterAdded.set( ch_order, characterAdded.get( characterAdded.size()-1 ) );
-		characterAdded.remove(characterAdded.get( characterAdded.size()-1 ));
-		net_num--;
+//		int ch_order = characterAdded.indexOf(ch);
+//		characterAdded.get( characterAdded.size()-1 ).net_index = ch.net_index;
+//		characterAdded.set( ch_order, characterAdded.get( characterAdded.size()-1 ) );
+//		characterAdded.remove(characterAdded.get( characterAdded.size()-1 ));
+//		net_num--;
+		if(characterAdded.indexOf(ch) != -1)
+		{
+			characterAdded.get( net_num - 1 ).net_index = ch.net_index;
+			characterAdded.set(ch.net_index, characterAdded.get( net_num - 1 ) );
+			ch.net_index = -1;
+			characterAdded.remove(net_num-1);
+			net_num--;
+		}
 	}
 	
 	public void clearall()
@@ -148,7 +168,8 @@ public class Network {
 		{
 			Character ch = iter.next();
 			ch.setIsAdded(0,0);
-		    iter.remove();
+			ch.net_index = -1;
+			iter.remove();
 		}
 //		characterAdded.clear();
 		isDraginto = false;
@@ -156,9 +177,16 @@ public class Network {
 	}
 	
 	public void clearall(JSONArray links){
-		net_num = 0;
+		for(Iterator<Character> iter = characterAdded.iterator(); iter.hasNext();) 
+		{
+			Character ch = iter.next();
+			ch.setIsAdded(0,0);
+			ch.net_index = -1;
+		    iter.remove();
+		}
+//		characterAdded.clear();
 		isDraginto = false;
+		net_num = 0;
 		this.links = links;
-		characterAdded.clear();
 	}
 }

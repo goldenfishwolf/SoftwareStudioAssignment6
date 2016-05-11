@@ -86,8 +86,7 @@ public class Character {
 //		}
 		if(isAddedIsEnabled && !isDragging){
 			if(!isAdded){
-				this.x = this.orgX;
-				this.y = this.orgY;
+				resetorg();
 			}
 		}
 
@@ -180,8 +179,10 @@ public class Character {
 	
 	public void resetorg()
 	{
-		x = orgX;
-		y = orgY;
+		Ani.to(this, (float)0.5, "x", orgX);
+		Ani.to(this, (float)0.5, "y", orgY);
+//		x = orgX;
+//		y = orgY;
 	}
 	
 }
